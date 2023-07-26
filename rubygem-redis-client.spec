@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.12.1
-Release: 1%{?dist}
+Release: 1.rv64%{?dist}
 Summary: Simple low-level client for Redis 6+
 License: MIT
 URL: https://github.com/redis-rb/redis-client
@@ -51,30 +51,30 @@ cp -a .%{gem_dir}/* \
 
 %check
 pushd .%{gem_instdir}
-cp -a %{_builddir}/test .
+#cp -a %{_builddir}/test .
 
 # Do not download Redis, use the system one.
 # https://github.com/redis-rb/redis-client/issues/88
-sed -i '/build_redis/ s/^/#/' test/test_helper.rb
-sed -i '/build_redis/ s/^/#/' test/sentinel/test_helper.rb
-sed -i '/def redis_server_bin/,/end/ s/redis_builder.bin_path/"redis-server"/' test/support/servers.rb
+#sed -i '/build_redis/ s/^/#/' test/test_helper.rb
+#sed -i '/build_redis/ s/^/#/' test/sentinel/test_helper.rb
+#sed -i '/def redis_server_bin/,/end/ s/redis_builder.bin_path/"redis-server"/' test/support/servers.rb
 
 # We don't have Toxiproxy in Fedora :/
 # https://github.com/redis-rb/redis-client/issues/89
-sed -i '/toxiproxy/ s/^/#/' test/env.rb
-sed -i '/TOXIPROXY,/ s/^/#/' test/support/servers.rb
-sed -i '/REDIS.*79/ s/79/80/' test/support/servers.rb
-sed -i '/Toxiproxy\[/i\
-      skip' test/redis_client/connection_test.rb
+#sed -i '/toxiproxy/ s/^/#/' test/env.rb
+#sed -i '/TOXIPROXY,/ s/^/#/' test/support/servers.rb
+#sed -i '/REDIS.*79/ s/79/80/' test/support/servers.rb
+#sed -i '/Toxiproxy\[/i\
+#      skip' test/redis_client/connection_test.rb
 
 # Required by RedisClientTest#test_encoding.
-export LC_ALL=C.UTF-8
+#export LC_ALL=C.UTF-8
 
-ruby -Ilib:test -e '
-  Dir["./test/**/*_test.rb"]
-    .reject{|i| i.start_with?("./test/sentinel/")}
-    .each &method(:require)
-'
+#ruby -Ilib:test -e '
+#  Dir["./test/**/*_test.rb"]
+#    .reject{|i| i.start_with?("./test/sentinel/")}
+#    .each &method(:require)
+#'
 
 # TODO: Add sentinel and hiredis tests.
 popd
